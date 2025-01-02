@@ -53,6 +53,7 @@ write_line([Symbol | Line], Size, Symbol):-
     write_line(Line, NewSize, Symbol).
 
 write_square(Number):-
+    bold_on,
     write(' '),
     write(Number),
     write(' ').

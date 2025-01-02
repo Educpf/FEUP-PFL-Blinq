@@ -1,6 +1,32 @@
 :- consult('view').
 :- consult('data').
 
+% TODO
+
+/*
+    MENUS 
+- Get Difficulty when CvC
+- Get starting square
+
+    UI
+- End screen
+- Evaluation
+- Game Title
+- Board 
+
+   MOVES
+- Choose move ( AI )
+- Value
+- Select Move
+- getWinner
+
+
+
+
+*/
+
+
+
 % The Game
 play:-
     % Menus
@@ -27,8 +53,6 @@ game_over(GameState, Winner):-
 game_loop(_, GameState):-
     game_over(GameState, Winner),
     end_screen(Winner), !.
-
-
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,

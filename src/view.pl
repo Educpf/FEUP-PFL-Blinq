@@ -96,9 +96,18 @@ display_square(Number, black):-
     white_fgrnd,
     write_square(Number),
     clear_colors.
-display_square(Number, valid_white).
+display_square(Number, valid_white):-
+    light_blue_bgrnd,
+    dark_blue_fgrnd,
+    write_square(Number),
+    clear_colors.
 
-display_square(Number, valid_black).
+display_square(Number, valid_black):-
+    dark_blue_bgrnd,
+    light_blue_fgrnd,
+    write_square(Number),
+    clear_colors.
+    
 display_square(Number, invalid_white):-
     light_red_bgrnd,
     dark_red_fgrnd,
@@ -111,12 +120,9 @@ display_square(Number, invalid_black):-
     clear_colors.
 
 
-
 display_row([[Value, Color] | Row]):-
-    bold_on,
     display_square(Value, Color),
-    display_row(Row),
-    clear_effects.
+    display_row(Row).
 
 display_rows([Row | Board]):-
     padding,
