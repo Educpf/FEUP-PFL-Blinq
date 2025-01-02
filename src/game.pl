@@ -4,24 +4,23 @@
 % TODO
 
 /*
+
     MENUS 
-- Get Difficulty when CvC
-- Get starting square
+- Get Difficulty when CvC --- X
+- Get starting square --- X
+- Start menu option 4
 
     UI
-- End screen
+- End screen -- X
 - Evaluation
 - Game Title
-- Board 
+- Board                -- EDU
 
    MOVES
-- Choose move ( AI )
-- Value
-- Select Move
-- getWinner
-
-
-
+- Choose move ( AI )   -- EDU
+- Value                -- EDU
+- Select Move --- X
+- getWinner -- X 
 
 */
 

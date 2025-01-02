@@ -86,6 +86,10 @@ size_menu(Size):-
 
 
 
+display_square(Number, null):-
+    gray_bgrnd,
+    write_square(Number),
+    clear_colors.
 
 display_square(Number, white):-
     white_bgrnd,
@@ -120,27 +124,60 @@ display_square(Number, invalid_black):-
     clear_colors.
 
 
+
+display_row([]):- !.
 display_row([[Value, Color] | Row]):-
     display_square(Value, Color),
     display_row(Row).
 
+display_rows([]):- !.
 display_rows([Row | Board]):-
-    padding,
-    length(Board, LineNumber),
-    write(LineNumber),
-    display_row(Row).
+    length(Board, RemainingLines),
+    CurrentLine is RemainingLines + 1,
+    PadSize is -CurrentLine // 10,
+    padding(PadSize),
+    % Line Number
+    write(CurrentLine),
+    write(' '),
     
+    display_square(' ', black),
+    display_row(Row),
+    display_square(' ', black),
 
-
-
+    % Line Number
+    write(' '),
+    write(CurrentLine),
+    nl,
+    display_rows(Board).
+    
+% create_board(5, [4, 5], B, V), display_board([B, _, _, _, [[4, 5], 1]]).
 display_board([Board, Player, BlocksLeft, ValidMoves, [Position, Rotation]]):-
     put_selected_block(Board, Position, Rotation, NewBoard),
-    padding,
-    length(Row, Length),
+    reverse(NewBoard, ReversedBoard),
+    length(Board, Length),
     TotalLength is Length * 3,
-    white_line(TotalLength),
+    nl,nl,nl,nl,
+    % Numbers
+    padding(5),
+    number_line(Length),
     nl,
-    display_rows(NewBoard).
+    % White line
+    padding(2),
+    display_square(' ', null),
+    white_line(TotalLength),
+    display_square(' ', null),
+    nl,
+    % Actual rows
+    display_rows(ReversedBoard),
+    % White line
+    padding(2),
+    display_square(' ', null),
+    white_line(TotalLength),
+    display_square(' ', null),
+    nl,
+    % Numbers
+    padding(5),
+    number_line(Length), nl,nl,nl.
 
 
 

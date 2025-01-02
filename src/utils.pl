@@ -59,11 +59,25 @@ write_square(Number):-
     write(' ').
 
 
-padding:-
-    write('                     ').
+padding(Difference):-
+    Total is 30 + Difference,
+    length(Padding, Total),
+    maplist(=(' '), Padding),
+    format('~s', [Padding]).
 
 white_line(Size):-
     white_bgrnd,
+    TotalSize is Size + 3,
     write_line(Line, Size, ' '),
     clear_colors.
+
+number_line(0).
+number_line(Number):-number_line(Number, 1).
+number_line(Number, Current):- Current > Number, !.
+number_line(Number, Current):-
+    write(' '),
+    number_chars(Current, CharList),
+    format('~2s',[CharList]),
+    Next is Current + 1,
+    number_line(Number, Next).
 

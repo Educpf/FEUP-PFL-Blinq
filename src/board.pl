@@ -150,7 +150,7 @@ put_block(Board, [XPos, YPos], Rotation, NewBoard):-
     put_squares(Board, [XPos, YPos], Colors, NewBoard).
 
 put_selected_block(Board, [XPos, YPos], Rotation, NewBoard):-
-    validate_move([XPos, YPos]),
+    validate_move(Board, [XPos, YPos]),
     valid_select_colors(SelectColors),
     RotateAmount is 1 - Rotation,
     rotate_list(RotateAmount, SelectColors, Colors),
