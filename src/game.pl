@@ -1,5 +1,5 @@
 :- consult('view').
-:- consult('data').
+:- consult('analysis').
 
 % TODO
 

@@ -150,7 +150,7 @@ display_rows([Row | Board]):-
     nl,
     display_rows(Board).
     
-% create_board(5, [4, 5], B, V), display_board([B, _, _, _, [[4, 5], 1]]).
+
 display_board([Board, Player, BlocksLeft, ValidMoves, [Position, Rotation]]):-
     put_selected_block(Board, Position, Rotation, NewBoard),
     reverse(NewBoard, ReversedBoard),

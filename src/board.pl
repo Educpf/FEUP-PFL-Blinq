@@ -27,7 +27,6 @@ create_board(4, _, Board, 30):-
     maplist(=([0, null]), Line),
     maplist(=(Line), Board).
 
-    
 
 create_board(5, [Xpos, Ypos], Board, 54):-
     length(Line, 10),
