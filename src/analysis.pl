@@ -1,5 +1,5 @@
 
-
+:- use_module(library(random)).
 
 choose_move([Board, _, _, ValidMoves, _], 1, [Position, Rotation]):-
     random_member(Position, ValidMoves),

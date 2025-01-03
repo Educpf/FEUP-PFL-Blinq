@@ -84,7 +84,18 @@ size_menu(Size):-
     Size is Input + 3.
 
 
+number_white(1, white1).
+number_white(2, white2).
+number_white(3, white3).
+number_white(4, white4).
+number_white(5, white5).
 
+number_black(1, black1).
+number_black(2, black2).
+number_black(3, black3).
+number_black(4, black4).
+number_black(5, black5).
+number_black(' ', black1).
 
 display_square(Number, null):-
     gray_bgrnd,
@@ -92,14 +103,19 @@ display_square(Number, null):-
     clear_colors.
 
 display_square(Number, white):-
-    white_bgrnd,
+    number_white(Number, Color),
+    call(Color),
     write_square(Number),
     clear_colors.
+
 display_square(Number, black):-
-    black_bgrnd,
+    number_black(Number, Color),
+    call(Color),
     white_fgrnd,
     write_square(Number),
     clear_colors.
+
+
 display_square(Number, valid_white):-
     light_blue_bgrnd,
     dark_blue_fgrnd,
@@ -150,6 +166,7 @@ display_rows([Row | Board]):-
     nl,
     display_rows(Board).
     
+
 
 display_board([Board, Player, BlocksLeft, ValidMoves, [Position, Rotation]]):-
     put_selected_block(Board, Position, Rotation, NewBoard),

@@ -1,5 +1,6 @@
 :- consult('view').
 :- consult('analysis').
+:- use_module(library(system)).
 
 % TODO
 
@@ -48,6 +49,8 @@ get_state([Type, Difficulty, BoardSize, StartingSquare], [Type, Difficulty], [Bo
 game_over(GameState, Winner):-
     get_winner(Board, Winner).
 
+get_winner(_, _):-fail.
+
 % Check game over
 game_loop(_, GameState):-
     game_over(GameState, Winner),
@@ -57,6 +60,10 @@ game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
     [Type, Level] = GameOptions,
     display_game(GameOptions, GameState),
+    write(GameOptions),
+    nl,
+    write(GameState),
+    nl,
     make_move(GameOptions, GameState, Move),
     move(GameState, Move, NewGameState),
     game_loop(GameOptions, NewGameState).
@@ -64,11 +71,12 @@ game_loop(GameOptions, GameState):-
 
 % REVIEW
 display_game(GameOptions, GameState):-
-    display_title(),
-    display_game(GameState),
-    show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
+    % display_title(),
+    clear_screen,
+    display_board(GameState).
+    % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
 
-display_title(GameOptions, GameState):-
+display_title(GameOptions, GameState).
 
 
 
@@ -78,13 +86,28 @@ make_move(['CvC', [Difficulty, _]], [Board, white, _, ValidMoves, _], Move):-
 make_move(['CvC', [_, Difficulty]], [Board, black, _, ValidMoves, _], Move):-
     choose_move([Board, black, _, ValidMoves, _], Difficulty, Move).
 
-make_move(['CvP', [_, Difficulty]], [Board, white, _, ValidMoves, _], Move):-
+make_move(['CvP', [Difficulty]], [Board, white, _, ValidMoves, _], Move):-
     choose_move([Board, white, _, ValidMoves, _], Difficulty, Move).
-make_move(['PvC', [_, Difficulty]], [Board, black, _, ValidMoves, _], Move):-
+make_move(['PvC', [Difficulty]], [Board, black, _, ValidMoves, _], Move):-
     choose_move([Board, black, _, ValidMoves, _], Difficulty, Move).
 
 make_move(GameOptions, [Board, _, _, ValidMoves, _], Move):-
     get_player_move([Board, _, _, ValidMoves, _], Move).
+
+
+player_move(w, moveUp).
+player_move(s, moveDown).
+player_move(a, moveLeft).
+player_move(d, moveRight).
+player_move(q, rotateLeft).
+player_move(e, rotateRight).
+player_move('\n', makeMove).
+
+get_player_move(_, Move):-
+    peek_char(Input),
+    player_move(Input, Move),
+    skip_line.
+
 
 
 move(GameState, moveUp, [Board, Player, Blocks, ValidMoves, [[XPos, NewYPos], Rotation]]):-
@@ -109,12 +132,12 @@ move(GameState, moveLeft, [Board, Player, Blocks, ValidMoves, [[NewXPos, YPos], 
     XPos > 1,
     NewXPos is XPos - 1.
 
-move(GameState, rotateRight, [Board, Player, Blocks, ValidMoves, [[NewXPos, YPos], NewRotation]]):-
-    [Board, Player, Blocks, ValidMoves, [[XPos, YPos], Rotation]] = GameState,
+move(GameState, rotateRight, [Board, Player, Blocks, ValidMoves, [Position, NewRotation]]):-
+    [Board, Player, Blocks, ValidMoves, [Position, Rotation]] = GameState,
     NewRotation is (Rotation mod 4 + 1).
 
-move(GameState, rotateLeft, [Board, Player, Blocks, ValidMoves, [[XPos, YPos], NewRotation]]):-
-    [Board, Player, Blocks, ValidMoves, [[XPos, YPos], Rotation]] = GameState,
+move(GameState, rotateLeft, [Board, Player, Blocks, ValidMoves, [Position, NewRotation]]):-
+    [Board, Player, Blocks, ValidMoves, [Position, Rotation]] = GameState,
     NewRotation is ((Rotation - 2) mod 4 + 1).
 
 move(GameState, makeMove, NewGameState):-
@@ -122,7 +145,7 @@ move(GameState, makeMove, NewGameState):-
     move(GameState, Move, NewGameState).
     
 move(GameState, [Position, Rotation], [NewBoard, NewPlayer, NewBlocks, NewValidMoves, Selected]):-
-    [Board, Player, Blocks, ValidMoves, _] = GameState,
+    [Board, Player, Blocks, ValidMoves, Selected] = GameState,
     member(Position, ValidMoves), % Validate Move
     put_block(Board, Position, Rotation, NewBoard), % Make Move
     valid_moves(NewBoard, NewValidMoves), % Redo validMoves generation
@@ -138,10 +161,5 @@ move(GameState, _, GameState).
 value(GameState, Player, Value).
 
 
-
-% Calculate what is the best move
-choose_move(GameState, 1, Move).
-
-choose_move(GameState, 2, Move).
 
 
