@@ -1,0 +1,9 @@
+                                                        $$ Choose the starting piece position $$
+                
+
+                          1. Top-Left     2. Top-Right     3. Bottom-Left     4. Bottom-Right     5. Middle     6. Custom                                                  
+
+
+                                                                       0. Back
+
+                                                                    

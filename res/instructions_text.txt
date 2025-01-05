@@ -1,0 +1,37 @@
+                                                                    Rules
+
+                Blinq is a connection game that uses dual coloured square blocks composed of two rectangles and shared by both players,
+                where they alternate turns placing those blocks according to some simple stacking rules, each trying to connect the 
+                two sides of the board of her colour (white or black).
+
+                Starting with White, players alternate turns placing one of their blocks on the board following these placement rules:
+                    - The blocks must be placed with the sides parallel to the board lines.
+                    - When placed on the board, the block must be placed inside a cell.
+                    - When placed on top of other blocks it must rest atop an arrangement of 2x2 blocks, and centred on it.
+
+                The game ends when one of the players resigns (losing the game) or, at the end of her turn, one of the players has 
+                connected the two sides of her colour (winning the game). The path connecting the two sides of the board must be 
+                continuous along the surfaces of the same colour when viewed from above.
+
+                If the players run out of pieces and a connection has not been made, it is a draw.
+
+                -------------------------------------------------------------------------------------------------------------------------
+
+                                                                   KeyBinds
+
+                w - moves up the selection block
+                s - moves down the selection block
+                a - moves left the selection block
+                d - moves right the selection block
+                q - rotates left the selection block
+                e - rotates right the selection block
+                c - confirms the selection block and finishes the turn
+                p - forfeits the game
+
+                When playing you can also indicate a specific position and its rotation (X-Y-R.) to move the selection block
+                Note: Have in account that the position of the piece is the top-left square and that the rotation is between 1 and 4 
+
+                                                            
+                                                                   Have Fun!
+
+                                                                    0. Back
