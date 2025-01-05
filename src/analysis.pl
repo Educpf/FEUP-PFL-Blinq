@@ -25,6 +25,16 @@ choose_move([Board, _, _, ValidMoves, _], 1, [Position, Rotation]):-
     random(1, 2, RotationType),
     Rotation is RotationType * 2.
 
+
+choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
+    write('USING SIMPLIFIED SYSTEM\n'),
+    sleep(4),
+    positive_infinity(PosInf),
+    negative_infinity(NegInf),
+    change_player(Player, OtherPlayer), 
+    min_max(Board, BlocksLeft, Player, 1, NegInf, PosInf, Score, BestMove), !.
+
+
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
     possible_moves(ValidMoves, PossibleMoves),
     positive_infinity(PosInf),
@@ -42,6 +52,13 @@ choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
 choose_move([[[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[1,black],[1,white],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[1,white],[1,black],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]]],white,50,[[1,10],[3,2],[3,4],[3,6],[3,8],[3,10],[5,2],[5,4],[5,8],[5,10],[7,2],[7,4],[7,6],[7,8],[7,10],[9,2],[9,4],[9,6],[9,8],[9,10]],[[1,8],1]], 2, G).
 */
 
+choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-
+    write('USING SIMPLIFIED SYSTEM\n'),
+    sleep(4),
+    positive_infinity(PosInf),
+    negative_infinity(NegInf),
+    change_player(Player, OtherPlayer), 
+    min_max(Board, BlocksLeft, Player, 2, NegInf, PosInf, Score, BestMove), !.
 
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-
     possible_moves(ValidMoves, PossibleMoves),
@@ -74,20 +91,20 @@ winner_evaluation(draw, 0.0).
 % Base Cases
 
 %MinMax Board Player Depth Alpha Beta Evaluation
-min_max(Board, BlocksLeft, Player, _, _, _, Evaluation):-
+min_max(Board, BlocksLeft, Player, _, _, _, Evaluation, []):-
     get_winner(Board, BlocksLeft, Winner),
     write('Someone won: '), write(Winner),
     winner_evaluation(Winner, Evaluation), !.
 
-min_max(Board, BlocksLeft, Player, 0, Alpha, Beta, Evaluation):-
+min_max(Board, BlocksLeft, Player, 0, Alpha, Beta, Evaluation, []):-
     value([Board, Player, BlocksLeft, _, _], white, Evaluation),
     write('Depth 0. Evaluation'), write(Evaluation), !.
 
-min_max(Board, BlocksLeft, Player, Depth, Alpha, Beta, Evaluation):-
+min_max(Board, BlocksLeft, Player, Depth, Alpha, Beta, Evaluation, BestMove):-
     valid_moves(Board, ValidMoves),
     possible_moves(ValidMoves, PossibleMoves),
     initial_eval(Player, Eval),
-    find_best(Board, BlocksLeft, Player, PossibleMoves, Depth, Alpha, Beta, Evaluation, Eval),
+    find_best(Board, BlocksLeft, Player, PossibleMoves, Depth, Alpha, Beta, Evaluation, Eval, BestMove, []),
     write('\n\nDepth: '), write(Depth),
     write('  The evaluation ->>> '), write(Evaluation), !.
 
@@ -100,12 +117,12 @@ choose_move([[[[1,white],[1,black],[1,black],[1,black],[1,white],[1,black],[1,bl
 
 */
 
-find_best(_, _,_, [], _, _, _, FinalEvaluation, FinalEvaluation):- !.
-find_best(_, _,_, _, _, Alpha, Beta, FinalEvaluation, FinalEvaluation):-
+find_best(_, _,_, [], _, _, _, FinalEvaluation, FinalEvaluation, FinalMove, FinalMove):- !.
+find_best(_, _,_, _, _, Alpha, Beta, FinalEvaluation, FinalEvaluation, FinalMove, FinalMove):-
     write('Checking for prune: '), write(Alpha), nl,write(Beta),nl,
     Beta =< Alpha, write('\nACTIVATED ECONOMYU MODEEEEEEEEEEEEEEEEEEEEEEEEEE\n'), !.
 
-find_best(Board, BlocksLeft, Player, [[Position, Direction] | PossibleMoves], Depth, Alpha, Beta, FinalEvaluation, Evaluation):-
+find_best(Board, BlocksLeft, Player, [[Position, Direction] | PossibleMoves], Depth, Alpha, Beta, FinalEvaluation, Evaluation, FinalMove, Move):-
     % Execute Move
     put_block(Board, Position, Direction, ChildBoard),
     ChildBlocksLeft is BlocksLeft - 1,
@@ -113,16 +130,24 @@ find_best(Board, BlocksLeft, Player, [[Position, Direction] | PossibleMoves], De
 
     % Calculate value of following the chosen move
     change_player(Player, OtherPlayer), 
-    min_max(ChildBoard, ChildBlocksLeft, OtherPlayer, NewDepth, Alpha, Beta, ChildEvaluation),
+    min_max(ChildBoard, ChildBlocksLeft, OtherPlayer, NewDepth, Alpha, Beta, ChildEvaluation, _),
     % Update Evaluation and AlphaBeta
     best_evaluation(Player, ChildEvaluation, Evaluation, BestEvaluation),
+    best_move([Position, Direction], Move, BestEvaluation, ChildEvaluation, BestMove),
     write('Before update: '), write(Player), nl,
     update_alpha_beta(Player, ChildEvaluation, Alpha, Beta, NewAlpha, NewBeta),
     % Try analyse another Move
-    find_best(Board, BlocksLeft, Player, PossibleMoves, Depth, NewAlpha, NewBeta, FinalEvaluation, BestEvaluation).
+    find_best(Board, BlocksLeft, Player, PossibleMoves, Depth, NewAlpha, NewBeta, FinalEvaluation, BestEvaluation, FinalMove, BestMove).
 
 best_evaluation(black, Eval1, Eval2, Result):- Result is min(Eval1, Eval2).
 best_evaluation(white, Eval1, Eval2, Result):- Result is max(Eval1, Eval2).
+
+best_move(NewMove, OldMove, OldEvaluation, OldEvaluation, NewMove).
+best_move(_, OldMove, _, _, OldMove).
+
+    
+
+
 
 update_alpha_beta(white, Evaluation, Alpha, Beta, NewAlpha, Beta):-
     NewAlpha is max(Alpha, Evaluation).
