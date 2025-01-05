@@ -30,6 +30,7 @@
 
 % The Game
 play:-
+    repeat,
     % Menus
     initial_state(GameConfig, GameOptions, GameState),
     % Game Cycle
@@ -49,16 +50,16 @@ get_state([Type, Difficulty, BoardSize, StartingSquare, Name1, Name2], [Type, Di
 
 game_over([Board, Player, Blocks, _, _], GameOptions, Winner, WinnerName):-
     get_winner(Board,Blocks, Winner),
-    %get_winner_name(GameOptions, Winner, WinnerName),
+    get_winner_name(GameOptions, Winner, WinnerName),
     !.
 
-game_over([_, white, -1, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
+game_over([_, white, surrender, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
     WinnerName = Name2,
-    Winner = 'black'.
+    Winner = 'black', !.
 
-game_over([_, black, -1, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
+game_over([_, black, surrender, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
     WinnerName = Name1,
-    Winner = 'white'.
+    Winner = 'white', !.
 
 
 
@@ -71,17 +72,13 @@ get_winner_name([_, _, Name1, Name2], black, Name2).
 % Check game over
 game_loop(GameOptions, GameState):-
     game_over(GameState, GameOptions, Winner, WinnerName),
-    display_endGame(GameState, Winner, WinnerName), !.
+    display_endGame(GameState, Winner, WinnerName), !, fail.
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
     display_game(GameOptions, GameState),
-    write(GameOptions),
-    nl,
-    write(GameState),
-    nl,
     make_move(GameOptions, GameState, Move),
-    move(GameState, Move, NewGameState),
+    move(GameState, Move, NewGameState), !,
     game_loop(GameOptions, NewGameState).
 
 
@@ -115,6 +112,7 @@ player_move(_,invalid).
 
 
 get_player_move(Board, Move):-
+    write('Your move ==> '),
     length(Board,L),
     M1 is L-1,
     peek_char(Input),
@@ -168,7 +166,7 @@ move(GameState, rotateLeft, [Board, Player, Blocks, ValidMoves, [Position, NewRo
     [Board, Player, Blocks, ValidMoves, [Position, Rotation]] = GameState,
     NewRotation is ((Rotation - 2) mod 4 + 1).
 
-move([Board, Player, Blocks, ValidMoves, Selected], quit, [Board, Player, -1, ValidMoves, Selected]).
+move([Board, Player, Blocks, ValidMoves, Selected], quit, [Board, Player, surrender, ValidMoves, Selected]).
 
 move([Board, Player, Blocks, ValidMoves, _],[select,Position,Rotation], [Board, Player, Blocks, ValidMoves, [Position, Rotation]]).
 

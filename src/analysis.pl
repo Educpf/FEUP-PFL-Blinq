@@ -21,54 +21,23 @@ choose_best_move(black, [Score-Move | Rest], Move).
 choose_best_move(white, Moves, Move):-last(Moves, Score-Move).
 
 choose_move([Board, _, _, ValidMoves, _], 1, [Position, Rotation]):-
+    sleep(1),
     random_member(Position, ValidMoves),
     random(1, 2, RotationType),
     Rotation is RotationType * 2.
 
 
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
+    sleep(1),
     positive_infinity(PosInf),
     negative_infinity(NegInf),
-    change_player(Player, OtherPlayer), 
     min_max(Board, BlocksLeft, Player, 1, NegInf, PosInf, Score, BestMove), !.
 
-
-choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
-    possible_moves(ValidMoves, PossibleMoves),
-    positive_infinity(PosInf),
-    negative_infinity(NegInf),
-    change_player(Player, OtherPlayer), 
-    findall(Score-[Position, Rotation],( member([Position, Rotation], PossibleMoves),
-                                    put_block(Board, Position, Rotation, NewBoard),
-                                    min_max(NewBoard, BlocksLeft, OtherPlayer, 0, NegInf, PosInf, Score)),
-                                    Moves),
-    sort(Moves, SortedMoves),
-    write(SortedMoves),
-    choose_best_move(Player, SortedMoves, BestMove), !.
-
-/*
-choose_move([[[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[1,black],[1,white],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[1,white],[1,black],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]],[[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null],[0,null]]],white,50,[[1,10],[3,2],[3,4],[3,6],[3,8],[3,10],[5,2],[5,4],[5,8],[5,10],[7,2],[7,4],[7,6],[7,8],[7,10],[9,2],[9,4],[9,6],[9,8],[9,10]],[[1,8],1]], 2, G).
-*/
-
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-
     positive_infinity(PosInf),
     negative_infinity(NegInf),
-    change_player(Player, OtherPlayer), 
     min_max(Board, BlocksLeft, Player, 2, NegInf, PosInf, Score, BestMove), !.
 
-choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-
-    possible_moves(ValidMoves, PossibleMoves),
-    positive_infinity(PosInf),
-    negative_infinity(NegInf),
-    change_player(Player, OtherPlayer), 
-    write(PossibleMoves),
-    findall(Score-[Position, Rotation],( member([Position, Rotation], PossibleMoves),
-                                    put_block(Board, Position, Rotation, NewBoard),
-                                    min_max(NewBoard, BlocksLeft, OtherPlayer, 2, NegInf, PosInf, Score)),
-                                    Moves),
-    sort(Moves, SortedMoves),
-    write(SortedMoves),
-    choose_best_move(Player, SortedMoves, BestMove), !.
 
 
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-

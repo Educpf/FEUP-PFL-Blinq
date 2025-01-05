@@ -234,15 +234,21 @@ display_rows([Row | Board]):-
     display_rows(Board).
     
 
-display_board([Board, Player, BlocksLeft, _, _], false):-
-   display_board([Board, Player, BlocksLeft, _, _]).
+display_board('CvC', [Board, _, _, _, _]):-
+   display_board(Board), !.
 
-display_board([Board, Player, BlocksLeft, _, [Position, Rotation]], true):-
+display_board('PvC', [Board, black, _, _, _]):-
+   display_board(Board), !.
+
+display_board('CvP', [Board, white, _, _, _]):-
+   display_board(Board), !.
+
+display_board(_, [Board, _, _, _, [Position, Rotation]]):-
    put_selected_block(Board, Position, Rotation, NewBoard),
-   display_board([NewBoard, Player, BlocksLeft, _, _]).
+   display_board(NewBoard), !.
 
 
-display_board([Board, Player, BlocksLeft, _, _]):-
+display_board(Board):-
     reverse(Board, ReversedBoard),
     length(Board, Length),
     TotalLength is Length * 3,
@@ -312,17 +318,20 @@ display_players('CvC', [L1,L2], PlayerName1, PlayerName2, Player):-
     display_bot(PlayerName2,L2,Player,black).
 
 
-display_game(GameOptions, GameState):-
+display_game([Mode, Difficulty, Name1, Name2], GameState):-
     clear_screen,
-    display_title(GameOptions, GameState),
-    display_board(GameState, true).
+    display_title([Mode, Difficulty, Name1, Name2], GameState),
+    display_board(Mode, GameState).
     % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
 
 display_endGame(GameState, Winner, WinnerName):-
     show_menu(game_over),
-    display_board(GameState, false),
+    display_board('CvC', GameState),
+    padding(5),
     write('Winner('), write(Winner), write(') -- '), 
-    write(WinnerName). 
+    write(WinnerName),nl,nl,
+    write('Return to Home Page [ Press Any Key ] '),
+    read_line(_). 
 
 
 display_instructions(GameState).
