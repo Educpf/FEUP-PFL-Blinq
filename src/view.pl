@@ -40,7 +40,7 @@ start_menu(1, ['PvP', [], Size, Position]) :-
 
 start_menu(2, [Mode , [Level], Size, Position]):-
     player_computer([Level, Pieces, Size, Position]),
-    nth1(Pieces,['PvC', 'CpV'], Mode).
+    nth1(Pieces,['PvC', 'CvP'], Mode).
 
 start_menu(3, ['CvC', [Level1, Level2], Size, Position]) :-
     computer_computer(Level1, Level2, Size, Position).
@@ -49,11 +49,11 @@ start_menu(4, _):-halt(0).
 
 computer_computer(Level1, Level2, Size, Position):-
     show_menu(computer_computer),
-    read_digit(1,3,Level1),
-    Level1 =\= 3,
+    read_digit(0,3,Level1),
+    Level1 =\= 0,
     show_menu(computer_computer),
-    read_digit(1,3,Level2),
-    Level2 =\= 3,
+    read_digit(0,3,Level2),
+    Level2 =\= 0,
     size_menu(Size),
     position_menu(Size, Position).
 
@@ -61,12 +61,12 @@ computer_computer(Level1, Level2, Size, Position):-
 
 player_computer([Level, Pieces, Size, Position]):-
     show_menu(player_computer, difficulty),
-    read_digit(1,3,Level),
-    Level =\= 3,
+    read_digit(0,3,Level),
+    Level =\= 0,
     show_menu(player_computer, pieces),
-    read_digit(1,3,Pieces),
+    read_digit(0,3,Pieces),
     write('entering size_menu\n'),
-    Pieces =\= 3,
+    Pieces =\= 0,
     write('entering size_menu\n'),
     size_menu(Size),
     position_menu(Size, Position).

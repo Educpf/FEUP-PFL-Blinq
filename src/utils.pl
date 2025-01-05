@@ -5,6 +5,8 @@
 :- consult('colors').
 
 
+
+
 % INPUT OUTPUT
 
 print_file(FilePath):-

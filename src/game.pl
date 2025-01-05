@@ -1,5 +1,6 @@
 :- consult('view').
 :- consult('analysis').
+:- consult('board').
 :- use_module(library(system)).
 
 % TODO
@@ -15,7 +16,7 @@
 - End screen -- X
 - Evaluation
 - Game Title
-- Board                -- EDU
+- Board     
 
    MOVES
 - Choose move ( AI )   -- EDU
@@ -32,7 +33,7 @@ play:-
     % Menus
     initial_state(GameConfig, GameOptions, GameState),
     % Game Cycle
-    game_loop(GameOptions, GameState).
+    game_loop(GameOptions, GameState), !.
 
 
 
@@ -46,15 +47,17 @@ get_state([Type, Difficulty, BoardSize, StartingSquare], [Type, Difficulty], [Bo
     valid_moves(Board, ValidMoves).
 
 
-game_over(GameState, Winner):-
-    get_winner(Board, Winner).
+game_over([Board, _, Blocks, _, _], _, Winner, _):-
+    write('Thinking about winning\n'),
+    get_winner(Board, Blocks, Winner), !.
 
-get_winner(_, _):-fail.
 
 % Check game over
 game_loop(_, GameState):-
-    game_over(GameState, Winner),
-    end_screen(Winner), !.
+    game_over(GameState, _, Winner, _), !,
+    end_screen(Winner).
+
+end_screen(Winner).
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
@@ -72,7 +75,7 @@ game_loop(GameOptions, GameState):-
 % REVIEW
 display_game(GameOptions, GameState):-
     % display_title(),
-    clear_screen,
+    % clear_screen,
     display_board(GameState).
     % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
 
@@ -81,15 +84,15 @@ display_title(GameOptions, GameState).
 
 
 
-make_move(['CvC', [Difficulty, _]], [Board, white, _, ValidMoves, _], Move):-
-    choose_move([Board, white, _, ValidMoves, _], Difficulty, Move).
-make_move(['CvC', [_, Difficulty]], [Board, black, _, ValidMoves, _], Move):-
-    choose_move([Board, black, _, ValidMoves, _], Difficulty, Move).
+make_move(['CvC', [Difficulty, _]], [Board, white, BlocksLeft, ValidMoves, _], Move):-
+    choose_move([Board, white, BlocksLeft, ValidMoves, _], Difficulty, Move).
+make_move(['CvC', [_, Difficulty]], [Board, black, BlocksLeft, ValidMoves, _], Move):-
+    choose_move([Board, black, BlocksLeft, ValidMoves, _], Difficulty, Move).
 
-make_move(['CvP', [Difficulty]], [Board, white, _, ValidMoves, _], Move):-
-    choose_move([Board, white, _, ValidMoves, _], Difficulty, Move).
-make_move(['PvC', [Difficulty]], [Board, black, _, ValidMoves, _], Move):-
-    choose_move([Board, black, _, ValidMoves, _], Difficulty, Move).
+make_move(['CvP', [Difficulty]], [Board, white, BlocksLeft, ValidMoves, _], Move):-
+    choose_move([Board, white, BlocksLeft, ValidMoves, _], Difficulty, Move).
+make_move(['PvC', [Difficulty]], [Board, black, BlocksLeft, ValidMoves, _], Move):-
+    choose_move([Board, black, BlocksLeft, ValidMoves, _], Difficulty, Move).
 
 make_move(GameOptions, [Board, _, _, ValidMoves, _], Move):-
     get_player_move([Board, _, _, ValidMoves, _], Move).
@@ -158,7 +161,6 @@ move(GameState, _, GameState).
 
 
 
-value(GameState, Player, Value).
 
 
 
