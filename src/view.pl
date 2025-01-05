@@ -234,12 +234,19 @@ display_rows([Row | Board]):-
     display_rows(Board).
     
 
-display_board([Board, Player, BlocksLeft, ValidMoves, [Position, Rotation]]):-
-    put_selected_block(Board, Position, Rotation, NewBoard),
-    reverse(NewBoard, ReversedBoard),
+display_board([Board, Player, BlocksLeft, _, _], false):-
+   display_board([Board, Player, BlocksLeft, _, _]).
+
+display_board([Board, Player, BlocksLeft, _, [Position, Rotation]], true):-
+   put_selected_block(Board, Position, Rotation, NewBoard),
+   display_board([NewBoard, Player, BlocksLeft, _, _]).
+
+
+display_board([Board, Player, BlocksLeft, _, _]):-
+    reverse(Board, ReversedBoard),
     length(Board, Length),
     TotalLength is Length * 3,
-    nl,nl,nl,nl,
+    nl,nl,
     % Numbers
     padding(5),
     number_line(Length),
@@ -271,19 +278,21 @@ check_player(_,_):-
     nl.
 
 display_player(Name, Player, Color):-
+    padding,
     display_square(' ', Color),write('   '), write(Name),
     check_player(Player, Color).
 
 display_bot(Name, Level, Player, Color):-
+    padding,
     difficulty_map(Level,L),
     display_square(' ', Color),write('   '), write(Name), write('('), write(L), write(')'),
     check_player(Player, Color).
 
 display_title([Mode, [L1,L2] , PlayerName1, PlayerName2], [_, Player, Blocks, _, _]):-
-    nl,
+    show_menu(home_title),
     display_players(Mode, [L1,L2], PlayerName1, PlayerName2, Player),nl,
-    write('Playing Now - '), write(Player),
-    write('          Remaining Pieces: '), write(Blocks).  
+    padding,
+    write('Remaining Pieces: '), write(Blocks).  
 
 
 display_players('PvP', _,  PlayerName1, PlayerName2, Player):-
@@ -306,11 +315,12 @@ display_players('CvC', [L1,L2], PlayerName1, PlayerName2, Player):-
 display_game(GameOptions, GameState):-
     clear_screen,
     display_title(GameOptions, GameState),
-    display_board(GameState).
+    display_board(GameState, true).
     % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
 
-display_endGame(Winner, WinnerName):-
+display_endGame(GameState, Winner, WinnerName):-
     show_menu(game_over),
+    display_board(GameState, false),
     write('Winner('), write(Winner), write(') -- '), 
     write(WinnerName). 
 

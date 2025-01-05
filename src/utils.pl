@@ -91,8 +91,9 @@ write_square(Number):-
     write(' ').
 
 
+padding:-padding(0).
 padding(Difference):-
-    Total is 30 + Difference,
+    Total is 56 + Difference,
     length(Padding, Total),
     maplist(=(' '), Padding),
     format('~s', [Padding]).

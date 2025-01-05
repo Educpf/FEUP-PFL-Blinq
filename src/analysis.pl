@@ -27,8 +27,6 @@ choose_move([Board, _, _, ValidMoves, _], 1, [Position, Rotation]):-
 
 
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 2, BestMove):-
-    write('USING SIMPLIFIED SYSTEM\n'),
-    sleep(4),
     positive_infinity(PosInf),
     negative_infinity(NegInf),
     change_player(Player, OtherPlayer), 
@@ -53,8 +51,6 @@ choose_move([[[[1,white],[1,black],[0,null],[0,null],[0,null],[0,null],[0,null],
 */
 
 choose_move([Board, Player, BlocksLeft, ValidMoves, _], 3, BestMove):-
-    write('USING SIMPLIFIED SYSTEM\n'),
-    sleep(4),
     positive_infinity(PosInf),
     negative_infinity(NegInf),
     change_player(Player, OtherPlayer), 

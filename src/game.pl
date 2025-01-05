@@ -71,7 +71,7 @@ get_winner_name([_, _, Name1, Name2], black, Name2).
 % Check game over
 game_loop(GameOptions, GameState):-
     game_over(GameState, GameOptions, Winner, WinnerName),
-    display_endGame(Winner, WinnerName), !.
+    display_endGame(GameState, Winner, WinnerName), !.
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
@@ -89,17 +89,17 @@ game_loop(GameOptions, GameState):-
 
 
 
-make_move(['CvC', [Difficulty, _]], [Board, white, BlocksLeft, ValidMoves, _], Move):-
+make_move(['CvC', [Difficulty, _], _, _], [Board, white, BlocksLeft, ValidMoves, _], Move):-
     choose_move([Board, white, BlocksLeft, ValidMoves, _], Difficulty, Move).
-make_move(['CvC', [_, Difficulty]], [Board, black, BlocksLeft, ValidMoves, _], Move):-
+make_move(['CvC', [_, Difficulty], _, _], [Board, black, BlocksLeft, ValidMoves, _], Move):-
     choose_move([Board, black, BlocksLeft, ValidMoves, _], Difficulty, Move).
 
-make_move(['CvP', [Difficulty]], [Board, white, BlocksLeft, ValidMoves, _], Move):-
+make_move(['CvP', [Difficulty, _], _, _], [Board, white, BlocksLeft, ValidMoves, _], Move):-
     choose_move([Board, white, BlocksLeft, ValidMoves, _], Difficulty, Move).
-make_move(['PvC', [Difficulty]], [Board, black, BlocksLeft, ValidMoves, _], Move):-
+make_move(['PvC', [Difficulty, _], _, _], [Board, black, BlocksLeft, ValidMoves, _], Move):-
     choose_move([Board, black, BlocksLeft, ValidMoves, _], Difficulty, Move).
 
-make_move(GameOptions, [Board, _, _, ValidMoves, _], Move):-
+make_move(_, [Board, _, _, _, _], Move):-
     get_player_move(Board, Move).
 
 
