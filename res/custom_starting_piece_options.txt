@@ -1,2 +1,2 @@
-                                                        $$ Choose the starting piece position (X-Y) $$
+                                                        $$ Choose the starting piece position (X-Y.) $$
 
