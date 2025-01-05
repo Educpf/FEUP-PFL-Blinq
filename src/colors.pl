@@ -17,6 +17,7 @@ light_blue_fgrnd:- write('\33\[38;2;201;232;255m').
 dark_blue_fgrnd:- write('\33\[38;2;0;18;31m').
 dark_red_fgrnd:- write('\33\[38;5;52m').
 light_red_fgrnd:- write('\33\[38;5;1m').
+purple_fgrnd:- write('\33\[38;2;170;105;234m').
 % Background Colors
 
 white_bgrnd:- write('\33\[48;5;15m').

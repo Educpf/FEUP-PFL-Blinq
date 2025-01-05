@@ -1,0 +1,12 @@
+                                                          $$ Select the Game Mode $$
+
+
+                                  1. Player vs Player        2. Player vs Computer        3. Computer vs Computer
+                                                            
+
+                                                               4. Instructions                                                            
+                                                            
+
+                                                                    0. Exit         
+                                                                    
+                                                                                                                     

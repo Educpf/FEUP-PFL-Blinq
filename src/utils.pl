@@ -39,7 +39,37 @@ read_digit(_, _, Digit):-
     get_code(Code),
     Digit is Code - 48,
     skip_line.
-    
+
+read_starting(Size, PosX, PosY) :- 
+    read(X-Y),
+    skip_line,
+    integer(X),
+    integer(Y),
+    M1 is (Size*2)-1,
+    M2 is Size *2,
+    between(1, M1, X),
+    between(2, M2, Y),
+    X mod 2 =:= 1,
+    Y mod 2 =:= 0,
+    PosX is X,
+    PosY is Y,
+    !.    
+
+read_starting(Size, PosX, PosY) :-
+    write('Invalid Position\n'),
+    read_starting(Size, PosX, PosY).
+
+
+read_position(MinX, MaxX, MinY, MaxY, PosX, PosY, Rot):-
+    read(PosX-PosY-Rot),
+    skip_line,
+    between(MinX, MaxX, PosX),
+    between(MinY, MaxY, PosY),
+    between(1,4,Rot),
+    write('afterbetgame\n'),
+    !.
+
+
 
 % ANSI COLOR CHANGES
 

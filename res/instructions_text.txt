@@ -1,0 +1,32 @@
+Blinq is a connection game that uses dual coloured
+square blocks composed of two rectangles and shared by both
+players, wh
+
+
+Players alternate turns placing those blocks according to some
+simple stacking rules, each trying to connect the two sides of the
+board of her colour.
+
+
+Each player has an allocated colour (white or black). Each player
+takes half of the blocks.
+
+Starting with White, players alternate turns placing one of their
+blocks on the board following these placement rules:
+- The blocks must be placed with the sides parallel to the board
+lines.
+- When placed on the board, the block must be placed inside a cell.
+
+When placed on top of other blocks it must rest atop an
+arrangement of 2x2 blocks, and centred on it.
+
+
+
+The game ends when one of the players resigns2 (losing the game)
+or, at the end of her turn, one of the players has connected the two
+sides of her colour (winning the game). The path connecting the
+two sides of the board must be continuous along the surfaces of
+the same colour when viewed from above.
+
+If the players run out of pieces and a connection has not been
+made, it is a draw.

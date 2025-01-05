@@ -41,24 +41,35 @@ initial_state(GameConfig, GameOptions, GameState):-
     get_state(GameConfig, GameOptions, GameState).
     
 
-get_state([Type, Difficulty, BoardSize, StartingSquare], [Type, Difficulty], [Board, white, BlocksNumber, ValidMoves, [[1, 2], 1]]):-
+get_state([Type, Difficulty, BoardSize, StartingSquare, Name1, Name2], [Type, Difficulty, Name1, Name2], [Board, white, BlocksNumber, ValidMoves, [[1, 2], 1]]):-
     create_board(BoardSize, StartingSquare, Board, BlocksNumber),
     valid_moves(Board, ValidMoves).
 
 
-game_over(GameState, Winner):-
-    get_winner(Board, Winner).
+game_over([Board, Player, Blocks, _, _], GameOptions, Winner, WinnerName):-
+    get_winner(Board, Winner),
+    %get_winner_name(GameOptions, Winner, WinnerName),
+    !.
+
+game_over([_, white, -1, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
+    WinnerName = Name2,
+    Winner = 'black'.
+
+game_over([_, black, -1, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
+    WinnerName = Name1,
+    Winner = 'white'.
+
 
 get_winner(_, _):-fail.
 
 % Check game over
-game_loop(_, GameState):-
-    game_over(GameState, Winner),
-    end_screen(Winner), !.
+game_loop(GameOptions, GameState):-
+    game_over(GameState, GameOptions, Winner, WinnerName),
+    display_endGame(Winner, WinnerName), !.
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
-    [Type, Level] = GameOptions,
+    [Type, Level, _, _] = GameOptions,
     display_game(GameOptions, GameState),
     write(GameOptions),
     nl,
@@ -67,17 +78,6 @@ game_loop(GameOptions, GameState):-
     make_move(GameOptions, GameState, Move),
     move(GameState, Move, NewGameState),
     game_loop(GameOptions, NewGameState).
-
-
-% REVIEW
-display_game(GameOptions, GameState):-
-    % display_title(),
-    clear_screen,
-    display_board(GameState).
-    % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
-
-display_title(GameOptions, GameState).
-
 
 
 
@@ -92,7 +92,7 @@ make_move(['PvC', [Difficulty]], [Board, black, _, ValidMoves, _], Move):-
     choose_move([Board, black, _, ValidMoves, _], Difficulty, Move).
 
 make_move(GameOptions, [Board, _, _, ValidMoves, _], Move):-
-    get_player_move([Board, _, _, ValidMoves, _], Move).
+    get_player_move(Board, Move).
 
 
 player_move(w, moveUp).
@@ -101,12 +101,32 @@ player_move(a, moveLeft).
 player_move(d, moveRight).
 player_move(q, rotateLeft).
 player_move(e, rotateRight).
-player_move('\n', makeMove).
+player_move(c, makeMove).
+player_move(p,quit).
+player_move(_,invalid).
 
-get_player_move(_, Move):-
+
+get_player_move(Board, Move):-
+    length(Board,L),
+    M1 is L-1,
+    peek_char(Input),
+    char_code(Input, Code),
+    between(48, 57, Code),
+    read_position(1,M1,2,L,PosX, PosY, Rot), 
+    Move = [select,[PosX,PosY],Rot],          
+    !.
+
+get_player_move(Board, Move):-
     peek_char(Input),
     player_move(Input, Move),
-    skip_line.
+    Move \= invalid,
+    skip_line,
+    !.
+
+get_player_move(Board, Move):-
+    skip_line,
+    write('Invalid\n'),
+    get_player_move(Board,Move).
 
 
 
@@ -139,6 +159,10 @@ move(GameState, rotateRight, [Board, Player, Blocks, ValidMoves, [Position, NewR
 move(GameState, rotateLeft, [Board, Player, Blocks, ValidMoves, [Position, NewRotation]]):-
     [Board, Player, Blocks, ValidMoves, [Position, Rotation]] = GameState,
     NewRotation is ((Rotation - 2) mod 4 + 1).
+
+move([Board, Player, Blocks, ValidMoves, Selected], quit, [Board, Player, -1, ValidMoves, Selected]).
+
+move([Board, Player, Blocks, ValidMoves, _],[select,Position,Rotation], [Board, Player, Blocks, ValidMoves, [Position, Rotation]]).
 
 move(GameState, makeMove, NewGameState):-
     [Board, Player, Blocks, ValidMoves, Move] = GameState,
