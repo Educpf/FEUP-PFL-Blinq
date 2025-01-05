@@ -1,14 +1,7 @@
 
-reset_styling:- write('\33\[0m').
-
-% Effects
-clear_effects:-write('\33\[22m').
-
+clear_colors:- write('\33\[0m').
 bold_on:-write('\33\[1m').
 
-% COLORS 
-
-clear_colors:- write('\33\[0m').
 % Foreground Colors
 
 white_fgrnd:- write('\33\[38;5;15m').
@@ -18,6 +11,7 @@ dark_blue_fgrnd:- write('\33\[38;2;0;18;31m').
 dark_red_fgrnd:- write('\33\[38;5;52m').
 light_red_fgrnd:- write('\33\[38;5;1m').
 purple_fgrnd:- write('\33\[38;2;170;105;234m').
+
 % Background Colors
 
 white_bgrnd:- write('\33\[48;5;15m').
@@ -32,7 +26,6 @@ black2 :- write('\33\[48;2;10;10;10m').
 black3 :- write('\33\[48;2;30;30;30m').
 black4 :- write('\33\[48;2;40;40;40m').
 black5 :- write('\33\[48;2;50;50;50m').
-
 
 black_bgrnd:- write('\33\[48;5;16m').
 gray_bgrnd:- write('\33\[48;2;73;77;79m').
