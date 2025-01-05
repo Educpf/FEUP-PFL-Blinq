@@ -62,6 +62,12 @@ game_over([_, black, -1, _, _], [_, _, Name1, Name2], Winner, WinnerName) :-
 
 get_winner(_, _):-fail.
 
+
+get_winner_name([_, _, Name1, Name2], white, Name1).
+
+get_winner_name([_, _, Name1, Name2], black, Name2).
+
+
 % Check game over
 game_loop(GameOptions, GameState):-
     game_over(GameState, GameOptions, Winner, WinnerName),
@@ -69,7 +75,6 @@ game_loop(GameOptions, GameState):-
 
 game_loop(GameOptions, GameState):-
     [Board, Player, Blocks, ValidMoves, Selected] = GameState,
-    [Type, Level, _, _] = GameOptions,
     display_game(GameOptions, GameState),
     write(GameOptions),
     nl,

@@ -30,6 +30,7 @@ get_game_config(Config):-
 
 
 show_menu(HeaderType):-
+    clear_screen,
     bold_on,
     purple_fgrnd,
     menu_to_file(HeaderType, Path),
@@ -37,6 +38,7 @@ show_menu(HeaderType):-
     reset_styling.
 
 show_menu(HeaderType, OptionsType):-
+    clear_screen,
     bold_on,
     purple_fgrnd,
     menu_to_file(HeaderType, Path),
@@ -302,6 +304,7 @@ display_players('CvC', [L1,L2], PlayerName1, PlayerName2, Player):-
 
 
 display_game(GameOptions, GameState):-
+    clear_screen,
     display_title(GameOptions, GameState),
     display_board(GameState).
     % show_evaluation(). % PUT IN GAMESTATE IF EVALUATION IS SHOWN OR NOT
